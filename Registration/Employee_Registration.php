@@ -1,70 +1,58 @@
+<?php
+$conn = new mysqli("localhost", "root", "", "employee_db");
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+if (isset($_POST['register'])) {
+
+    $employee_id = $_POST['employee_id'];
+    $first_name = $_POST['first_name'];
+    $last_name = $_POST['last_name'];
+    $email = $_POST['email'];
+    $phone = $_POST['phone'];
+    $department = $_POST['department'];
+    $position = $_POST['position'];
+    $date_hired = $_POST['date_hired'];
+
+    $sql = "INSERT INTO employee_registration
+            (employee_id, first_name, last_name, email, phone, department, position, date_hired)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+    $stmt = $conn->prepare($sql);
+
+    $stmt->bind_param(
+        "ssssssss",
+        $employee_id,
+        $first_name,
+        $last_name,
+        $email,
+        $phone,
+        $department,
+        $position,
+        $date_hired
+    );
+
+    if ($stmt->execute()) {
+        echo "<script>alert('Employee registered successfully!');</script>";
+    } else {
+        echo "<script>alert('Error registering employee.');</script>";
+    }
+
+    $stmt->close();
+}
+
+$conn->close();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Employee Registration</title>
-   <style>
-       body {
-           font-family: Arial, sans-serif;
-           background-color: #f5f5f5;
-           margin: 0;
-           padding: 30px;
-       }
-
-        .container {
-            width: 700px;
-           margin: auto;
-            background: white;
-           padding: 30px;
-          border-radius: 10px;
-       }
-
-       h2 {
-           text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;            font-weight: bold;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 10px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .row {
-            display: flex;
-            gap: 15px;
-        }
-
-        .row .form-group {
-            flex: 1;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 5px;
-            background-color: #333;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #555;
-        }
-    </style>
+   <title>Employee Registration </title>
+          <link rel="stylesheet" href="style.css">    
 </head>
 
 <body>
